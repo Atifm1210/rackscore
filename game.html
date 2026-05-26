@@ -1,1 +1,1414 @@
+<style>
+:root {
+  --felt-950: #061b17;
+  --felt-900: #092720;
+  --felt-800: #0d382e;
+  --felt-700: #145242;
+  --surface: rgba(9, 28, 27, 0.7);
+  --surface-strong: rgba(8, 23, 22, 0.9);
+  --surface-soft: rgba(255, 255, 255, 0.05);
+  --line: rgba(171, 233, 215, 0.14);
+  --line-bright: rgba(88, 236, 202, 0.35);
+  --text: #f3f5ef;
+  --muted: #a4bbb4;
+  --teal: #36edbe;
+  --cyan: #49d7ff;
+  --purple: #a07bff;
+  --danger: #ff7868;
+  --gold: #f7cf48;
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  font-family: Inter, "Avenir Next", "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% -15%, rgba(54, 237, 190, 0.18), transparent 38%),
+    radial-gradient(circle at 87% 15%, rgba(73, 215, 255, 0.07), transparent 27%),
+    linear-gradient(145deg, var(--felt-950), #061f1b 38%, #031311);
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.32;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.14) 0.65px, transparent 0.65px),
+    radial-gradient(rgba(0, 0, 0, 0.2) 0.75px, transparent 0.75px);
+  background-position: 0 0, 3px 3px;
+  background-size: 6px 6px;
+  mix-blend-mode: soft-light;
+}
+
+button,
+input { font: inherit; }
+
+button { color: inherit; }
+
+.app {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 34px 20px 40px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 26px;
+  animation: enter 0.6s ease both;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 7px 14px;
+  border: 1px solid rgba(54, 237, 190, 0.2);
+  border-radius: 999px;
+  color: var(--teal);
+  background: rgba(54, 237, 190, 0.06);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 7px;
+  height: 7px;
+  content: "";
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 12px var(--teal);
+}
+
+.title {
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: clamp(39px, 6vw, 62px);
+  font-weight: 750;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+  text-shadow: 0 0 38px rgba(54, 237, 190, 0.2);
+}
+
+.title-accent { color: var(--teal); }
+
+.subtitle {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: clamp(14px, 2vw, 16px);
+}
+
+.setup-card,
+.panel,
+.live-shell {
+  border: 1px solid var(--line);
+  background: linear-gradient(140deg, rgba(16, 49, 44, 0.74), rgba(5, 20, 19, 0.82));
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.setup-card {
+  border-radius: var(--radius-lg);
+  padding: clamp(18px, 3vw, 28px);
+  animation: rise 0.6s 0.08s ease both;
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: minmax(420px, 1.32fr) minmax(270px, 0.88fr);
+  gap: 22px;
+}
+
+.setup-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.setup-label {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.micro-copy {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+}
+
+.pcount-row {
+  display: flex;
+  gap: 10px;
+}
+
+.pcount-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.pcount-btn strong {
+  color: var(--text);
+  font-size: 17px;
+}
+
+.pcount-btn:hover {
+  transform: translateY(-1px);
+  color: var(--text);
+  border-color: var(--line-bright);
+}
+
+.pcount-btn.sel {
+  transform: scale(1.02);
+  color: var(--text);
+  border-color: rgba(54, 237, 190, 0.55);
+  background: linear-gradient(120deg, rgba(54, 237, 190, 0.19), rgba(73, 215, 255, 0.1));
+  box-shadow: 0 0 24px rgba(54, 237, 190, 0.13), inset 0 0 18px rgba(54, 237, 190, 0.06);
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.player-setup-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.player-setup-card:focus-within {
+  border-color: rgba(73, 215, 255, 0.42);
+  background: rgba(73, 215, 255, 0.06);
+}
+
+.ball {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 750;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.38);
+  box-shadow: inset -5px -6px 10px rgba(0, 0, 0, 0.3), inset 5px 5px 10px rgba(255, 255, 255, 0.2);
+}
+
+.ball::after {
+  position: absolute;
+  top: 7px;
+  left: 9px;
+  width: 8px;
+  height: 5px;
+  content: "";
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.38);
+  transform: rotate(-35deg);
+}
+
+.setup-input-wrap { min-width: 0; flex: 1; }
+
+.input-label {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  margin-bottom: 4px;
+}
+
+.name-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.name-input::selection { background: rgba(54, 237, 190, 0.3); }
+
+.settings-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+
+.setting {
+  min-height: 62px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.setting-name {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.setting-value {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-start {
+  width: 100%;
+  min-height: 61px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(100deg, #18bc96, #29e7b6 45%, #30bfd7);
+  color: #04241c;
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 14px 28px rgba(31, 217, 171, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.btn-start:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 18px 38px rgba(31, 217, 171, 0.32);
+}
+
+.btn-start:active { transform: translateY(0) scale(0.99); }
+
+.rules-panel {
+  padding: 20px;
+  border: 1px solid rgba(54, 237, 190, 0.15);
+  border-radius: 20px;
+  background: rgba(3, 16, 15, 0.38);
+}
+
+.rules-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: 680;
+}
+
+.rules-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  color: var(--gold);
+  background: rgba(247, 207, 72, 0.11);
+}
+
+.rules-sub {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.rules-content {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.rule-section {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.rule-section:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.rule-heading {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.rule-section p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.43;
+}
+
+.rule-points {
+  margin: 5px 0 0 16px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.48;
+}
+
+.rule-points li::marker {
+  color: var(--teal);
+}
+
+.rule-highlight {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.ball-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.ball-legend .ball {
+  width: 27px;
+  height: 27px;
+  font-size: 10px;
+}
+
+/* Live match screen */
+.live-shell {
+  border-radius: var(--radius-lg);
+  padding: clamp(16px, 3vw, 26px);
+  animation: rise 0.46s ease both;
+}
+
+.scoreboard-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.scoreboard-brand {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.scoreboard-title {
+  margin-top: 5px;
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 720;
+  letter-spacing: -0.04em;
+}
+
+.head-stats {
+  display: flex;
+  gap: 8px;
+}
+
+.head-stat {
+  min-width: 74px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.head-stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.head-stat strong { font-size: 15px; }
+
+.turn-bar {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 13px 15px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(54, 237, 190, 0.16);
+  background: rgba(54, 237, 190, 0.055);
+}
+
+.turn-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.turn-options { display: flex; gap: 7px; flex-wrap: wrap; }
+
+.turn-btn {
+  padding: 8px 13px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.turn-btn:hover { color: var(--text); }
+
+.turn-btn.active-turn {
+  color: #05251e;
+  background: var(--teal);
+  border-color: var(--teal);
+  box-shadow: 0 0 18px rgba(54, 237, 190, 0.32);
+}
+
+.live-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(250px, 0.72fr);
+  gap: 15px;
+}
+
+.player-cards {
+  display: grid;
+  gap: 10px;
+}
+
+.player-card {
+  position: relative;
+  padding: 15px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.player-card.active-card {
+  border-color: rgba(54, 237, 190, 0.5);
+  box-shadow: inset 0 0 32px rgba(54, 237, 190, 0.04), 0 0 25px rgba(54, 237, 190, 0.08);
+}
+
+.player-card.leading-card { border-color: rgba(247, 207, 72, 0.32); }
+
+.active-badge,
+.lead-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 11px;
+  border-bottom-left-radius: 12px;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.active-badge {
+  color: var(--teal);
+  background: rgba(54, 237, 190, 0.1);
+}
+
+.lead-badge {
+  color: var(--gold);
+  background: rgba(247, 207, 72, 0.09);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 13px;
+  padding-right: 75px;
+}
+
+.p-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 650;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.break-chip {
+  color: var(--cyan);
+  margin-left: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.score-area { text-align: right; }
+
+.p-score-big {
+  font-size: 37px;
+  font-weight: 730;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.score-caption {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.score-flash {
+  position: absolute;
+  right: 15px;
+  top: 67px;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.score-flash.show { opacity: 1; }
+
+.balls-label {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.balls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 13px;
+}
+
+.p-ball,
+.modal-ball {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.14s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.p-ball:hover,
+.modal-ball:hover { transform: translateY(-2px) scale(1.08); }
+
+.p-ball.gone,
+.modal-ball.mgone {
+  opacity: 0.2;
+  cursor: default;
+  filter: grayscale(0.4);
+  transform: none;
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn,
+.btn {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 8px 11px;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+
+.action-btn:active,
+.btn:active { transform: scale(0.98); }
+
+.btn-foul {
+  color: #ffc1b8;
+  border-color: rgba(255, 120, 104, 0.32);
+}
+
+.btn-foul:hover { background: rgba(255, 120, 104, 0.1); }
+
+.btn-safety {
+  color: #b5ecff;
+  border-color: rgba(73, 215, 255, 0.28);
+}
+
+.btn-safety:hover { background: rgba(73, 215, 255, 0.09); }
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.match-status,
+.log {
+  padding: 15px;
+  border-radius: 17px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.status-heading,
+.log-title {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.status-line:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.status-line span { color: var(--muted); }
+
+.status-line strong {
+  font-weight: 650;
+  text-align: right;
+}
+
+.log {
+  min-height: 170px;
+  flex: 1;
+}
+
+.log-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.log-row:last-child { border-bottom: none; }
+
+.log-row .ball {
+  width: 19px;
+  height: 19px;
+  font-size: 8px;
+}
+
+.log-row .ball::after { display: none; }
+
+.log-empty {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.tag {
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+.tag-pocket { color: var(--teal); background: rgba(54, 237, 190, 0.11); }
+.tag-foul { color: #ffc1b8; background: rgba(255, 120, 104, 0.11); }
+.tag-safety { color: #b5ecff; background: rgba(73, 215, 255, 0.11); }
+.tag-nine { color: var(--gold); background: rgba(247, 207, 72, 0.13); }
+
+.game-controls {
+  display: flex;
+  gap: 9px;
+}
+
+.game-controls .btn { padding: 12px; }
+
+.btn-end {
+  color: #06231c;
+  border-color: transparent;
+  background: var(--teal);
+}
+
+.btn-end:hover { filter: brightness(1.06); }
+
+.modal-backdrop {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(2, 10, 9, 0.92);
+}
+
+.modal-backdrop.open { display: flex; }
+
+.modal-box { width: 100%; }
+
+.modal-title {
+  margin-bottom: 5px;
+  font-size: 17px;
+  font-weight: 680;
+}
+
+.modal-sub,
+.modal-note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.modal-note {
+  margin-top: 4px;
+  color: #ffc1b8;
+}
+
+.modal-balls {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 13px 0;
+}
+
+.modal-ball.msel {
+  box-shadow: 0 0 0 2px var(--teal), 0 0 16px rgba(54, 237, 190, 0.35);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.modal-btn.confirm {
+  border-color: transparent;
+  background: var(--teal);
+  color: #05251e;
+  font-weight: 700;
+}
+
+.winner-banner {
+  display: none;
+  padding: 22px;
+  margin-bottom: 16px;
+  text-align: center;
+  border-radius: 18px;
+  border: 1px solid rgba(54, 237, 190, 0.35);
+  background: rgba(54, 237, 190, 0.09);
+}
+
+.winner-text {
+  color: var(--teal);
+  font-size: clamp(24px, 4vw, 31px);
+  font-weight: 730;
+}
+
+.winner-sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 8px 0 15px;
+}
+
+@keyframes enter {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes rise {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 790px) {
+  .app { padding-top: 24px; }
+  .setup-grid,
+  .live-grid { grid-template-columns: 1fr; }
+  .rules-panel { order: -1; }
+}
+
+@media (max-width: 540px) {
+  .players-grid,
+  .settings-row { grid-template-columns: 1fr; }
+  .pcount-btn { padding-inline: 4px; }
+  .scoreboard-head { display: block; }
+  .head-stats { margin-top: 15px; }
+  .card-header { padding-right: 64px; }
+}
+</style>
+
+<div class="app">
+  <h1 class="visually-hidden">9-Ball Match Tracker</h1>
+  <header class="hero" id="setupHero">
+    <div class="eyebrow">Live match setup</div>
+    <div class="title">9-Ball <span class="title-accent">Match Tracker</span></div>
+    <p class="subtitle">Single rack &bull; Points scoring &bull; Set the table, then break</p>
+  </header>
+
+  <div id="setupScreen" class="setup-card">
+    <div class="setup-grid">
+      <section class="setup-main" aria-label="Match setup">
+        <div>
+          <div class="section-head">
+            <div class="setup-label">Player count</div>
+            <div class="micro-copy">Choose who is at the table</div>
+          </div>
+          <div class="pcount-row">
+            <button class="pcount-btn" onclick="setCount(2)"><strong>2</strong> Players</button>
+            <button class="pcount-btn" onclick="setCount(3)"><strong>3</strong> Players</button>
+            <button class="pcount-btn sel" onclick="setCount(4)"><strong>4</strong> Players</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+          <div class="section-head">
+            <div class="setup-label">Player setup</div>
+            <div class="micro-copy">Edit player names</div>
+          </div>
+          <div id="playerSetupRows" class="players-grid"></div>
+        </div>
+
+        <div>
+          <div class="section-head">
+            <div class="setup-label">Match settings</div>
+            <div class="micro-copy">This rack's scoring format</div>
+          </div>
+          <div class="settings-row">
+            <div class="setting">
+              <span class="setting-name">Mode</span>
+              <span class="setting-value">Rack points</span>
+            </div>
+            <div class="setting">
+              <span class="setting-name">Break</span>
+              <span class="setting-value">Random order</span>
+            </div>
+            <div class="setting">
+              <span class="setting-name">Foul</span>
+              <span class="setting-value">-3 points</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-start" onclick="startGame()">Start Match &#127921;</button>
+      </section>
+
+      <aside class="rules-panel" aria-label="Game rules">
+        <div class="rules-title"><span class="rules-icon">&#9733;</span> Rules</div>
+        <p class="rules-sub">Official scoring guide for this 9-ball match.</p>
+        <div class="rules-content">
+          <section class="rule-section">
+            <span class="rule-heading">Game Objective</span>
+            <p>The goal is to pot balls in numerical order from 1 to 9 and finish with the highest score.</p>
+          </section>
+          <section class="rule-section">
+            <span class="rule-heading">Scoring</span>
+            <p>Each ball is worth the same number as the ball.</p>
+            <ul class="rule-points">
+              <li>Potting the 1-ball gives <span class="rule-highlight">+1 point</span>.</li>
+              <li>Potting the 2-ball gives <span class="rule-highlight">+2 points</span>.</li>
+              <li>Potting the 3-ball gives <span class="rule-highlight">+3 points</span>.</li>
+              <li>Continue this up to the 9-ball, which gives <span class="rule-highlight">+9 points</span>.</li>
+            </ul>
+          </section>
+          <section class="rule-section">
+            <span class="rule-heading">Order Rule</span>
+            <p>Players must always hit the lowest-numbered ball currently on the table first. If the 1-ball is next, the player must hit the 1-ball first. After it is cleared, the 2-ball becomes the next required ball.</p>
+          </section>
+          <section class="rule-section">
+            <span class="rule-heading">Fouls</span>
+            <p>A foul gives the player <span class="rule-highlight">-3 points</span>. A foul happens when:</p>
+            <ul class="rule-points">
+              <li>The player hits the wrong ball first.</li>
+              <li>The player misses the required ball completely.</li>
+              <li>The player pots the cue ball.</li>
+            </ul>
+          </section>
+          <section class="rule-section">
+            <span class="rule-heading">Scratch Rule</span>
+            <p>If a player pots the correct ball but also pots the cue ball, the potted ball does not count and the player receives <span class="rule-highlight">-3 points</span>. Example: potting the 1-ball while scratching gives no +1; it gives -3 instead.</p>
+          </section>
+          <section class="rule-section">
+            <span class="rule-heading">Winning</span>
+            <p>The game ends after the 9-ball is completed or when the match is finished. The player with the highest total score wins.</p>
+          </section>
+        </div>
+        <div class="ball-legend" id="ballLegend" aria-label="Nine billiard balls"></div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="gameScreen" class="live-shell" style="display:none;">
+    <div id="winnerBanner" class="winner-banner">
+      <div class="winner-text" id="winnerText"></div>
+      <div class="winner-sub" id="winnerSub"></div>
+      <button class="btn btn-end" onclick="backToSetup()">New Match</button>
+    </div>
+
+    <div class="scoreboard-head">
+      <div>
+        <div class="scoreboard-brand">9-Ball Match Tracker</div>
+        <div class="scoreboard-title">Live Scoreboard</div>
+      </div>
+      <div class="head-stats">
+        <div class="head-stat"><span>Rack</span><strong>01</strong></div>
+        <div class="head-stat"><span>Inning</span><strong id="inningDisplay">01</strong></div>
+        <div class="head-stat"><span>Mode</span><strong>Points</strong></div>
+      </div>
+    </div>
+
+    <div class="turn-bar">
+      <span class="turn-label">At the table</span>
+      <div id="turnBtns" class="turn-options"></div>
+    </div>
+
+    <div class="live-grid">
+      <div id="playerCards" class="player-cards"></div>
+      <aside class="side-panel">
+        <div class="match-status">
+          <div class="status-heading">Rack status</div>
+          <div class="status-line"><span>Break</span><strong id="breakPlayer">-</strong></div>
+          <div class="status-line"><span>Balls left</span><strong id="ballsRemaining">9</strong></div>
+          <div class="status-line"><span>9-ball</span><strong id="nineBallStatus">On table</strong></div>
+        </div>
+        <div class="log">
+          <div class="log-title">Match history</div>
+          <div id="logList"><div class="log-empty">No shots recorded yet</div></div>
+        </div>
+        <div class="game-controls">
+          <button class="btn btn-end" onclick="endGame()">End Rack</button>
+          <button class="btn" onclick="backToSetup()">Reset</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = [
+  { bg: '#F5C400', text: '#15150d' },
+  { bg: '#005FB5', text: '#ffffff' },
+  { bg: '#D2001A', text: '#ffffff' },
+  { bg: '#6A008A', text: '#ffffff' }
+];
+const BALL_BG = ['#F5C400', '#005FB5', '#D2001A', '#6A008A', '#FF6B00', '#005C2E', '#8B0000', '#161616', '#F5C400'];
+const BALL_FG = ['#14130b', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#14130b'];
+const STRIPE = [false, false, false, false, false, false, false, false, true];
+
+let numPlayers = 4;
+let players = [];
+let scores = [];
+let pocketedGlobal = {};
+let eventLog = [];
+let gameOver = false;
+let activeTurn = 0;
+let breakTurn = 0;
+let inning = 1;
+let foulPlayer = -1;
+let foulSelections = [];
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function ballBg(ball, flat) {
+  if (STRIPE[ball - 1] && !flat) {
+    return `linear-gradient(${BALL_BG[ball - 1]} 30%, #fff 30%, #fff 70%, ${BALL_BG[ball - 1]} 70%)`;
+  }
+  return BALL_BG[ball - 1];
+}
+
+function ballMarkup(ball, className) {
+  return `<span class="ball ${className || ''}" style="background:${ballBg(ball)};color:${BALL_FG[ball - 1]};">${ball}</span>`;
+}
+
+function renderLegend() {
+  document.getElementById('ballLegend').innerHTML = Array.from({ length: 9 }, (_, i) => ballMarkup(i + 1, '')).join('');
+}
+
+function setCount(number) {
+  numPlayers = number;
+  document.querySelectorAll('.pcount-btn').forEach((button, index) => {
+    button.classList.toggle('sel', [2, 3, 4][index] === number);
+  });
+  buildSetup();
+}
+
+function buildSetup() {
+  const rows = document.getElementById('playerSetupRows');
+  rows.innerHTML = '';
+  for (let index = 0; index < numPlayers; index += 1) {
+    const savedName = players[index] && players[index].name ? players[index].name : `Player ${index + 1}`;
+    const card = document.createElement('label');
+    card.className = 'player-setup-card';
+    card.innerHTML = `${ballMarkup(index + 1, '')}
+      <span class="setup-input-wrap">
+        <span class="input-label">Player ${index + 1}</span>
+        <input class="name-input" id="sname${index}" value="${escapeHtml(savedName)}" maxlength="20" />
+      </span>`;
+    rows.appendChild(card);
+  }
+}
+
+function shuffle(array) {
+  for (let index = array.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [array[index], array[swapIndex]] = [array[swapIndex], array[index]];
+  }
+}
+
+function startGame() {
+  players = [];
+  scores = [];
+  pocketedGlobal = {};
+  eventLog = [];
+  gameOver = false;
+  activeTurn = 0;
+  breakTurn = 0;
+  inning = 1;
+  foulPlayer = -1;
+  foulSelections = [];
+
+  for (let index = 0; index < numPlayers; index += 1) {
+    const name = document.getElementById(`sname${index}`).value.trim() || `Player ${index + 1}`;
+    players.push({ name, color: COLORS[index], avatarBall: index + 1 });
+  }
+
+  shuffle(players);
+  scores = new Array(players.length).fill(0);
+  document.getElementById('setupHero').style.display = 'none';
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('gameScreen').style.display = 'block';
+  render();
+}
+
+function render() {
+  document.getElementById('inningDisplay').textContent = String(inning).padStart(2, '0');
+  document.getElementById('breakPlayer').textContent = players[breakTurn] ? players[breakTurn].name : '-';
+  document.getElementById('ballsRemaining').textContent = String(9 - Object.keys(pocketedGlobal).length);
+  document.getElementById('nineBallStatus').textContent = pocketedGlobal[9] ? nineBallText() : 'On table';
+  renderTurnBar();
+  renderCards();
+  renderLog();
+}
+
+function nineBallText() {
+  const event = eventLog.find((item) => item.type === 'pocket' && item.ball === 9);
+  return event ? `${event.player} sank it` : 'Removed on foul';
+}
+
+function renderTurnBar() {
+  const bar = document.getElementById('turnBtns');
+  bar.innerHTML = '';
+  players.forEach((player, index) => {
+    const button = document.createElement('button');
+    button.className = `turn-btn${activeTurn === index ? ' active-turn' : ''}`;
+    button.textContent = player.name;
+    button.onclick = () => {
+      activeTurn = index;
+      render();
+    };
+    bar.appendChild(button);
+  });
+}
+
+function scoreColor(score) {
+  return score < 0 ? 'var(--danger)' : 'var(--text)';
+}
+
+function renderCards() {
+  const container = document.getElementById('playerCards');
+  container.innerHTML = '';
+  const maxScore = Math.max(...scores);
+
+  players.forEach((player, index) => {
+    const isActive = activeTurn === index && !gameOver;
+    const isLeading = !gameOver && scores[index] === maxScore && scores.filter((score) => score === maxScore).length === 1;
+    const card = document.createElement('article');
+    card.className = `player-card${isActive ? ' active-card' : ''}${!isActive && isLeading ? ' leading-card' : ''}`;
+
+    if (isActive) card.innerHTML += '<div class="active-badge">At table</div>';
+    if (!isActive && isLeading) card.innerHTML += '<div class="lead-badge">Leader</div>';
+    card.innerHTML += `<div class="card-header">
+      ${ballMarkup(player.avatarBall, '')}
+      <div class="p-name">${escapeHtml(player.name)}${index === breakTurn ? '<span class="break-chip">Break</span>' : ''}</div>
+      <div class="score-area">
+        <div class="p-score-big" id="sv${index}" style="color:${scoreColor(scores[index])};">${scores[index]}</div>
+        <span class="score-caption">Points</span>
+      </div>
+      <div class="score-flash" id="fl${index}"></div>
+    </div>
+    <div class="balls-label">Tap a ball when this player pockets it</div>
+    <div class="balls-row" id="br${index}"></div>
+    <div class="action-row">
+      <button class="action-btn btn-foul" onclick="openFoul(${index})">Foul (-3)</button>
+      <button class="action-btn btn-safety" onclick="callSafety(${index})">Safety / pass</button>
+    </div>
+    <div class="modal-backdrop" id="modal${index}">
+      <div class="modal-box">
+        <div class="modal-title">Foul - ${escapeHtml(player.name)}</div>
+        <div class="modal-sub">Select any balls pocketed during this foul.</div>
+        <div class="modal-note">Removed balls do not score. Player receives -3.</div>
+        <div class="modal-balls" id="mb${index}"></div>
+        <div class="modal-actions">
+          <button class="modal-btn" onclick="closeModal()">Cancel</button>
+          <button class="modal-btn confirm" onclick="confirmFoul(${index})">Confirm foul</button>
+        </div>
+      </div>
+    </div>`;
+    container.appendChild(card);
+
+    const ballsRow = document.getElementById(`br${index}`);
+    for (let ball = 1; ball <= 9; ball += 1) {
+      const gone = Boolean(pocketedGlobal[ball]);
+      const element = document.createElement('button');
+      element.className = `ball p-ball${gone ? ' gone' : ''}`;
+      element.style.background = gone ? BALL_BG[ball - 1] : ballBg(ball);
+      element.style.color = BALL_FG[ball - 1];
+      element.textContent = ball;
+      element.disabled = gone || gameOver;
+      if (!gone && !gameOver) element.onclick = () => pocketBall(index, ball);
+      ballsRow.appendChild(element);
+    }
+
+    if (foulPlayer === index) {
+      document.getElementById(`modal${index}`).classList.add('open');
+      const modalBalls = document.getElementById(`mb${index}`);
+      for (let ball = 1; ball <= 9; ball += 1) {
+        const gone = Boolean(pocketedGlobal[ball]);
+        const element = document.createElement('button');
+        element.className = `ball modal-ball${gone ? ' mgone' : ''}${foulSelections.includes(ball) ? ' msel' : ''}`;
+        element.style.background = ballBg(ball);
+        element.style.color = BALL_FG[ball - 1];
+        element.textContent = ball;
+        element.disabled = gone;
+        if (!gone) element.onclick = () => toggleFoulBall(ball);
+        modalBalls.appendChild(element);
+      }
+    }
+  });
+}
+
+function flash(index, text, color) {
+  const element = document.getElementById(`fl${index}`);
+  if (!element) return;
+  element.textContent = text;
+  element.style.color = color;
+  element.classList.add('show');
+  setTimeout(() => {
+    element.classList.remove('show');
+    element.textContent = '';
+  }, 1400);
+}
+
+function pocketBall(index, ball) {
+  if (gameOver || pocketedGlobal[ball]) return;
+  pocketedGlobal[ball] = true;
+  scores[index] += ball;
+  eventLog.push({ type: 'pocket', ball, player: players[index].name, pts: `+${ball}` });
+  render();
+  flash(index, `+${ball} points`, 'var(--teal)');
+}
+
+function openFoul(index) {
+  if (gameOver) return;
+  foulPlayer = index;
+  foulSelections = [];
+  renderCards();
+}
+
+function toggleFoulBall(ball) {
+  if (foulSelections.includes(ball)) {
+    foulSelections = foulSelections.filter((selection) => selection !== ball);
+  } else {
+    foulSelections.push(ball);
+  }
+  renderCards();
+}
+
+function confirmFoul(index) {
+  foulSelections.forEach((ball) => {
+    pocketedGlobal[ball] = true;
+  });
+  scores[index] -= 3;
+  const note = foulSelections.length ? `-3 (${foulSelections.join(', ')} removed)` : '-3';
+  eventLog.push({ type: 'foul', ball: null, player: players[index].name, pts: note });
+  foulPlayer = -1;
+  foulSelections = [];
+  advanceTurn(index);
+  render();
+  flash(index, '-3 foul', 'var(--danger)');
+}
+
+function callSafety(index) {
+  if (gameOver) return;
+  eventLog.push({ type: 'safety', ball: null, player: players[index].name, pts: 'Pass' });
+  advanceTurn(index);
+  render();
+}
+
+function advanceTurn(index) {
+  activeTurn = (index + 1) % players.length;
+  inning += 1;
+}
+
+function closeModal() {
+  foulPlayer = -1;
+  foulSelections = [];
+  renderCards();
+}
+
+function endGame() {
+  gameOver = true;
+  const maxScore = Math.max(...scores);
+  const winners = players.filter((_, index) => scores[index] === maxScore);
+  const banner = document.getElementById('winnerBanner');
+  banner.style.display = 'block';
+  if (winners.length > 1) {
+    document.getElementById('winnerText').textContent = "Rack ends in a tie";
+    document.getElementById('winnerSub').textContent = `${winners.map((player) => player.name).join(' & ')} - ${maxScore} points each`;
+  } else {
+    const winnerIndex = scores.indexOf(maxScore);
+    document.getElementById('winnerText').textContent = `${players[winnerIndex].name} wins the rack`;
+    document.getElementById('winnerSub').textContent = scores.map((score, index) => `${players[index].name}: ${score}`).join('  |  ');
+  }
+  render();
+}
+
+function renderLog() {
+  const list = document.getElementById('logList');
+  if (!eventLog.length) {
+    list.innerHTML = '<div class="log-empty">No shots recorded yet</div>';
+    return;
+  }
+  list.innerHTML = eventLog.slice().reverse().map((event, index) => {
+    const number = eventLog.length - index;
+    const isNine = event.type === 'pocket' && event.ball === 9;
+    const tagClass = isNine ? 'tag-nine' : event.type === 'pocket' ? 'tag-pocket' : event.type === 'foul' ? 'tag-foul' : 'tag-safety';
+    const tagLabel = isNine ? '9-ball' : event.type;
+    const ballDot = event.ball ? ballMarkup(event.ball, '') : '';
+    return `<div class="log-row">
+      <span style="color:var(--muted);min-width:20px;">#${number}</span>
+      ${ballDot}
+      <span style="font-weight:600;flex:1;">${escapeHtml(event.player)}</span>
+      <span class="tag ${tagClass}">${tagLabel}</span>
+      <span style="color:var(--muted);text-align:right;">${escapeHtml(event.pts)}</span>
+    </div>`;
+  }).join('');
+}
+
+function backToSetup() {
+  gameOver = false;
+  foulPlayer = -1;
+  foulSelections = [];
+  document.getElementById('winnerBanner').style.display = 'none';
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('setupHero').style.display = 'block';
+  document.getElementById('setupScreen').style.display = 'block';
+  buildSetup();
+}
+
+renderLegend();
+setCount(4);
+</script>
 
