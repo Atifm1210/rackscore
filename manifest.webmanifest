@@ -1,0 +1,23 @@
+{
+  "name": "RackScore - 9-Ball Match Tracker",
+  "short_name": "RackScore",
+  "description": "Neon 9-ball match tracker with live scoring and rack history.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#061b17",
+  "theme_color": "#061b17",
+  "icons": [
+    {
+      "src": "./rackscore-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

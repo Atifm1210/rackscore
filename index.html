@@ -1,3 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#061b17">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RackScore">
+<meta name="application-name" content="RackScore">
+<meta name="description" content="Neon 9-ball match tracker with live scoring, fouls, scratch tracking, and rack history.">
+<title>RackScore | 9-Ball Match Tracker</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="./rackscore-icon.svg">
 <style>
 :root {
   --felt-950: #061b17;
@@ -25,6 +42,10 @@
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   font-family: Inter, "Avenir Next", "Segoe UI", Arial, sans-serif;
   color: var(--text);
   background:
@@ -50,13 +71,20 @@ body::before {
 button,
 input { font: inherit; }
 
-button { color: inherit; }
+button {
+  color: inherit;
+  touch-action: manipulation;
+}
+
+input {
+  font-size: 16px;
+}
 
 .app {
   position: relative;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 34px 20px 40px;
+  padding: calc(34px + env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
 }
 
 .app::before {
@@ -1122,6 +1150,13 @@ button { color: inherit; }
 }
 
 @media (max-width: 540px) {
+  .app {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  .hero { margin-bottom: 18px; }
+  .setup-card,
+  .live-shell { border-radius: 22px; padding: 14px; }
   .players-grid,
   .settings-row { grid-template-columns: 1fr; }
   .pcount-btn { padding-inline: 4px; }
@@ -1134,7 +1169,29 @@ button { color: inherit; }
   .p-ball { width: 40px; height: 40px; }
   .game-controls { flex-direction: column; }
 }
+
+@media (max-width: 430px) {
+  .title { font-size: clamp(34px, 12vw, 44px); }
+  .subtitle { line-height: 1.45; }
+  .pcount-row { gap: 6px; }
+  .pcount-btn { gap: 4px; font-size: 12px; min-height: 50px; }
+  .pcount-btn strong { font-size: 15px; }
+  .preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .head-stats { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .head-stat,
+  .sound-toggle { min-width: 0; width: 100%; }
+  .turn-bar { padding: 12px; }
+  .turn-btn { min-height: 44px; }
+  .action-row { flex-direction: column; }
+  .rule-section p { font-size: 13px; }
+}
+
+@media (display-mode: standalone) {
+  .app { padding-top: calc(20px + env(safe-area-inset-top)); }
+}
 </style>
+</head>
+<body>
 
 <div class="app">
   <h1 class="visually-hidden">9-Ball Match Tracker</h1>
@@ -1747,4 +1804,14 @@ function backToSetup() {
 
 renderLegend();
 setCount(4);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // The scorecard remains available online if offline setup cannot be installed.
+    });
+  });
+}
 </script>
+</body>
+</html>
