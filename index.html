@@ -59,6 +59,22 @@ button { color: inherit; }
   padding: 34px 20px 40px;
 }
 
+.app::before {
+  position: fixed;
+  right: max(18px, calc((100vw - 1100px) / 2));
+  bottom: 44px;
+  width: 180px;
+  height: 155px;
+  content: "";
+  pointer-events: none;
+  opacity: 0.12;
+  background: linear-gradient(60deg, transparent 49%, var(--teal) 50%, transparent 51%),
+    linear-gradient(-60deg, transparent 49%, var(--teal) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, var(--teal) 50%, transparent 51%);
+  filter: drop-shadow(0 0 14px rgba(54, 237, 190, 0.35));
+  transform: rotate(180deg);
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -224,7 +240,13 @@ button { color: inherit; }
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.035);
-  transition: border-color 0.18s ease, background 0.18s ease;
+  transition: all 0.2s ease;
+}
+
+.player-setup-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(54, 237, 190, 0.25);
+  box-shadow: 0 9px 20px rgba(0, 0, 0, 0.16);
 }
 
 .player-setup-card:focus-within {
@@ -286,6 +308,13 @@ button { color: inherit; }
 
 .name-input::selection { background: rgba(54, 237, 190, 0.3); }
 
+.setup-score {
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .settings-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -315,6 +344,41 @@ button { color: inherit; }
   font-weight: 600;
 }
 
+.match-preview {
+  padding: 14px;
+  border: 1px solid rgba(54, 237, 190, 0.15);
+  border-radius: 16px;
+  background: rgba(54, 237, 190, 0.045);
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.preview-item {
+  padding: 9px 7px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+}
+
+.preview-item span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.preview-item strong {
+  color: var(--text);
+  font-size: 11px;
+}
+
 .btn-start {
   width: 100%;
   min-height: 61px;
@@ -327,7 +391,8 @@ button { color: inherit; }
   letter-spacing: -0.01em;
   cursor: pointer;
   box-shadow: 0 14px 28px rgba(31, 217, 171, 0.18);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  transition: all 0.2s ease;
+  animation: startPulse 2.5s infinite ease-in-out;
 }
 
 .btn-start:hover {
@@ -337,6 +402,11 @@ button { color: inherit; }
 }
 
 .btn-start:active { transform: translateY(0) scale(0.99); }
+
+.btn-start.loading {
+  pointer-events: none;
+  opacity: 0.84;
+}
 
 .rules-panel {
   padding: 20px;
@@ -372,40 +442,63 @@ button { color: inherit; }
   line-height: 1.45;
 }
 
-.rules-content {
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-}
-
 .rule-section {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  transition: all 0.2s ease;
 }
 
-.rule-section:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
+.rule-section[open] {
+  border-color: rgba(54, 237, 190, 0.25);
+  background: rgba(54, 237, 190, 0.05);
 }
 
 .rule-heading {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--teal);
-  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 12px;
+  list-style: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
   font-weight: 750;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+}
+
+.rule-heading::-webkit-details-marker { display: none; }
+
+.rule-heading::after {
+  margin-left: auto;
+  content: "+";
+  color: var(--teal);
+  font-size: 16px;
+}
+
+.rule-section[open] .rule-heading::after { content: "-"; }
+
+.rule-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 8px;
+  color: var(--teal);
+  background: rgba(54, 237, 190, 0.1);
 }
 
 .rule-section p {
+  padding: 0 12px 11px;
   color: var(--muted);
-  font-size: 12px;
-  line-height: 1.43;
+  font-size: 13px;
+  line-height: 1.52;
 }
 
 .rule-points {
-  margin: 5px 0 0 16px;
+  margin: 0 12px 11px 28px;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.48;
@@ -551,7 +644,12 @@ button { color: inherit; }
   border-radius: 18px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.03);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: all 0.2s ease;
+}
+
+.player-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 25px rgba(0, 0, 0, 0.17);
 }
 
 .player-card.active-card {
@@ -641,6 +739,14 @@ button { color: inherit; }
 
 .score-flash.show { opacity: 1; }
 
+.score-flash.gain {
+  animation: floatScore 1.4s ease both;
+}
+
+.score-flash.loss {
+  animation: floatScore 1.4s ease both;
+}
+
 .balls-label {
   margin-bottom: 8px;
   color: var(--muted);
@@ -674,6 +780,18 @@ button { color: inherit; }
   transform: none;
 }
 
+.p-ball.locked {
+  opacity: 0.43;
+  cursor: not-allowed;
+  filter: saturate(0.55);
+}
+
+.p-ball.required {
+  box-shadow: 0 0 0 2px var(--teal), 0 0 18px rgba(54, 237, 190, 0.4),
+    inset -5px -6px 10px rgba(0, 0, 0, 0.3), inset 5px 5px 10px rgba(255, 255, 255, 0.2);
+  animation: ballGlow 1.8s ease-in-out infinite;
+}
+
 .action-row {
   display: flex;
   gap: 8px;
@@ -695,6 +813,13 @@ button { color: inherit; }
 
 .action-btn:active,
 .btn:active { transform: scale(0.98); }
+
+.action-btn:disabled,
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+}
 
 .btn-foul {
   color: #ffc1b8;
@@ -799,10 +924,60 @@ button { color: inherit; }
 .tag-foul { color: #ffc1b8; background: rgba(255, 120, 104, 0.11); }
 .tag-safety { color: #b5ecff; background: rgba(73, 215, 255, 0.11); }
 .tag-nine { color: var(--gold); background: rgba(247, 207, 72, 0.13); }
+.tag-scratch { color: #ffc1b8; background: rgba(255, 120, 104, 0.14); }
 
 .game-controls {
   display: flex;
   gap: 9px;
+}
+
+.progress-track {
+  height: 7px;
+  margin: 9px 0 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--teal), var(--cyan));
+  box-shadow: 0 0 13px rgba(54, 237, 190, 0.45);
+  transition: width 0.35s ease;
+}
+
+.notice {
+  display: none;
+  padding: 10px 13px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.notice.show { display: block; animation: enter 0.2s ease; }
+.notice.good { color: var(--teal); background: rgba(54, 237, 190, 0.1); }
+.notice.bad { color: #ffc1b8; background: rgba(255, 120, 104, 0.11); }
+
+.history-champions {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.champions-list {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.sound-toggle {
+  width: auto;
+  flex: none;
 }
 
 .game-controls .btn { padding: 12px; }
@@ -892,6 +1067,10 @@ button { color: inherit; }
   background: rgba(54, 237, 190, 0.09);
 }
 
+.winner-banner.nine-win {
+  animation: winnerGlow 0.7s ease-in-out 3 alternate;
+}
+
 .winner-text {
   color: var(--teal);
   font-size: clamp(24px, 4vw, 31px);
@@ -914,11 +1093,32 @@ button { color: inherit; }
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes startPulse {
+  0%, 100% { box-shadow: 0 14px 28px rgba(31, 217, 171, 0.18); }
+  50% { box-shadow: 0 16px 36px rgba(31, 217, 171, 0.34); }
+}
+
+@keyframes ballGlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes floatScore {
+  from { opacity: 1; transform: translateY(4px); }
+  to { opacity: 0; transform: translateY(-18px); }
+}
+
+@keyframes winnerGlow {
+  from { box-shadow: 0 0 0 rgba(54, 237, 190, 0); }
+  to { box-shadow: 0 0 35px rgba(54, 237, 190, 0.34); }
+}
+
 @media (max-width: 790px) {
   .app { padding-top: 24px; }
   .setup-grid,
   .live-grid { grid-template-columns: 1fr; }
   .rules-panel { order: -1; }
+  .preview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 540px) {
@@ -928,6 +1128,11 @@ button { color: inherit; }
   .scoreboard-head { display: block; }
   .head-stats { margin-top: 15px; }
   .card-header { padding-right: 64px; }
+  .action-btn,
+  .btn,
+  .btn-start { min-height: 48px; }
+  .p-ball { width: 40px; height: 40px; }
+  .game-controls { flex-direction: column; }
 }
 </style>
 
@@ -985,19 +1190,33 @@ button { color: inherit; }
           </div>
         </div>
 
-        <button class="btn-start" onclick="startGame()">Start Match &#127921;</button>
+        <div class="match-preview">
+          <div class="section-head">
+            <div class="setup-label">Current Match</div>
+            <div class="micro-copy">Ready to break</div>
+          </div>
+          <div class="preview-grid">
+            <div class="preview-item"><span>Players</span><strong id="previewPlayers">4</strong></div>
+            <div class="preview-item"><span>Mode</span><strong>Rack Points</strong></div>
+            <div class="preview-item"><span>Foul</span><strong>-3 Points</strong></div>
+            <div class="preview-item"><span>Break</span><strong>Random</strong></div>
+            <div class="preview-item"><span>Rack</span><strong>9-Ball</strong></div>
+          </div>
+        </div>
+
+        <button class="btn-start" id="startButton" onclick="startGame()">Start Match &#127921;</button>
       </section>
 
       <aside class="rules-panel" aria-label="Game rules">
         <div class="rules-title"><span class="rules-icon">&#9733;</span> Rules</div>
-        <p class="rules-sub">Official scoring guide for this 9-ball match.</p>
+        <p class="rules-sub">Tap a topic for the quick scoring guide.</p>
         <div class="rules-content">
-          <section class="rule-section">
-            <span class="rule-heading">Game Objective</span>
+          <details class="rule-section" open>
+            <summary class="rule-heading"><span class="rule-symbol">&#9678;</span> Objective</summary>
             <p>The goal is to pot balls in numerical order from 1 to 9 and finish with the highest score.</p>
-          </section>
-          <section class="rule-section">
-            <span class="rule-heading">Scoring</span>
+          </details>
+          <details class="rule-section">
+            <summary class="rule-heading"><span class="rule-symbol">+</span> Scoring</summary>
             <p>Each ball is worth the same number as the ball.</p>
             <ul class="rule-points">
               <li>Potting the 1-ball gives <span class="rule-highlight">+1 point</span>.</li>
@@ -1005,28 +1224,28 @@ button { color: inherit; }
               <li>Potting the 3-ball gives <span class="rule-highlight">+3 points</span>.</li>
               <li>Continue this up to the 9-ball, which gives <span class="rule-highlight">+9 points</span>.</li>
             </ul>
-          </section>
-          <section class="rule-section">
-            <span class="rule-heading">Order Rule</span>
+          </details>
+          <details class="rule-section">
+            <summary class="rule-heading"><span class="rule-symbol">&#8594;</span> Order Rule</summary>
             <p>Players must always hit the lowest-numbered ball currently on the table first. If the 1-ball is next, the player must hit the 1-ball first. After it is cleared, the 2-ball becomes the next required ball.</p>
-          </section>
-          <section class="rule-section">
-            <span class="rule-heading">Fouls</span>
+          </details>
+          <details class="rule-section">
+            <summary class="rule-heading"><span class="rule-symbol">!</span> Fouls</summary>
             <p>A foul gives the player <span class="rule-highlight">-3 points</span>. A foul happens when:</p>
             <ul class="rule-points">
               <li>The player hits the wrong ball first.</li>
               <li>The player misses the required ball completely.</li>
               <li>The player pots the cue ball.</li>
             </ul>
-          </section>
-          <section class="rule-section">
-            <span class="rule-heading">Scratch Rule</span>
+          </details>
+          <details class="rule-section">
+            <summary class="rule-heading"><span class="rule-symbol">&#9675;</span> Scratch Rule</summary>
             <p>If a player pots the correct ball but also pots the cue ball, the potted ball does not count and the player receives <span class="rule-highlight">-3 points</span>. Example: potting the 1-ball while scratching gives no +1; it gives -3 instead.</p>
-          </section>
-          <section class="rule-section">
-            <span class="rule-heading">Winning</span>
+          </details>
+          <details class="rule-section">
+            <summary class="rule-heading"><span class="rule-symbol">&#9733;</span> Winning</summary>
             <p>The game ends after the 9-ball is completed or when the match is finished. The player with the highest total score wins.</p>
-          </section>
+          </details>
         </div>
         <div class="ball-legend" id="ballLegend" aria-label="Nine billiard balls"></div>
       </aside>
@@ -1048,9 +1267,12 @@ button { color: inherit; }
       <div class="head-stats">
         <div class="head-stat"><span>Rack</span><strong>01</strong></div>
         <div class="head-stat"><span>Inning</span><strong id="inningDisplay">01</strong></div>
-        <div class="head-stat"><span>Mode</span><strong>Points</strong></div>
+        <div class="head-stat"><span>Timer</span><strong id="timerDisplay">00:00</strong></div>
+        <button class="btn sound-toggle" id="soundButton" onclick="toggleSound()">Sound Off</button>
       </div>
     </div>
+
+    <div class="notice" id="matchNotice"></div>
 
     <div class="turn-bar">
       <span class="turn-label">At the table</span>
@@ -1062,7 +1284,9 @@ button { color: inherit; }
       <aside class="side-panel">
         <div class="match-status">
           <div class="status-heading">Rack status</div>
+          <div class="progress-track"><span class="progress-fill" id="progressFill"></span></div>
           <div class="status-line"><span>Break</span><strong id="breakPlayer">-</strong></div>
+          <div class="status-line"><span>Required ball</span><strong id="requiredBall">1-ball</strong></div>
           <div class="status-line"><span>Balls left</span><strong id="ballsRemaining">9</strong></div>
           <div class="status-line"><span>9-ball</span><strong id="nineBallStatus">On table</strong></div>
         </div>
@@ -1070,7 +1294,12 @@ button { color: inherit; }
           <div class="log-title">Match history</div>
           <div id="logList"><div class="log-empty">No shots recorded yet</div></div>
         </div>
+        <div class="history-champions">
+          <div class="status-heading">Rack winner history</div>
+          <div id="rackHistory" class="champions-list">No completed racks yet</div>
+        </div>
         <div class="game-controls">
+          <button class="btn" id="undoButton" onclick="undoLastShot()">Undo Shot</button>
           <button class="btn btn-end" onclick="endGame()">End Rack</button>
           <button class="btn" onclick="backToSetup()">Reset</button>
         </div>
@@ -1099,8 +1328,70 @@ let gameOver = false;
 let activeTurn = 0;
 let breakTurn = 0;
 let inning = 1;
-let foulPlayer = -1;
-let foulSelections = [];
+let undoStack = [];
+let matchStartedAt = 0;
+let timerHandle = null;
+let soundEnabled = false;
+let noticeHandle = null;
+let rackWinners = loadRackWinners();
+
+function loadRackWinners() {
+  try {
+    return JSON.parse(localStorage.getItem('rackscore-winners') || '[]');
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveRackWinners() {
+  try {
+    localStorage.setItem('rackscore-winners', JSON.stringify(rackWinners.slice(0, 5)));
+  } catch (error) {
+    // Storage can be unavailable in private browsing; the match still works.
+  }
+}
+
+function saveUndoState() {
+  undoStack.push(JSON.stringify({ scores, pocketedGlobal, eventLog, activeTurn, inning, gameOver }));
+  if (undoStack.length > 30) undoStack.shift();
+}
+
+function nextBall() {
+  for (let ball = 1; ball <= 9; ball += 1) {
+    if (!pocketedGlobal[ball]) return ball;
+  }
+  return null;
+}
+
+function showNotice(text, type) {
+  const notice = document.getElementById('matchNotice');
+  notice.textContent = text;
+  notice.className = `notice show ${type}`;
+  clearTimeout(noticeHandle);
+  noticeHandle = setTimeout(() => {
+    notice.className = 'notice';
+  }, 2200);
+}
+
+function playTone(kind) {
+  if (!soundEnabled || !window.AudioContext) return;
+  const context = new AudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = kind === 'bad' ? 'sawtooth' : 'sine';
+  oscillator.frequency.value = kind === 'bad' ? 180 : 560;
+  gain.gain.setValueAtTime(0.04, context.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.16);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start();
+  oscillator.stop(context.currentTime + 0.17);
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('soundButton').textContent = soundEnabled ? 'Sound On' : 'Sound Off';
+  if (soundEnabled) playTone('good');
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -1131,6 +1422,7 @@ function setCount(number) {
   document.querySelectorAll('.pcount-btn').forEach((button, index) => {
     button.classList.toggle('sel', [2, 3, 4][index] === number);
   });
+  document.getElementById('previewPlayers').textContent = String(number);
   buildSetup();
 }
 
@@ -1145,7 +1437,8 @@ function buildSetup() {
       <span class="setup-input-wrap">
         <span class="input-label">Player ${index + 1}</span>
         <input class="name-input" id="sname${index}" value="${escapeHtml(savedName)}" maxlength="20" />
-      </span>`;
+      </span>
+      <span class="setup-score">0 pts</span>`;
     rows.appendChild(card);
   }
 }
@@ -1158,6 +1451,13 @@ function shuffle(array) {
 }
 
 function startGame() {
+  const startButton = document.getElementById('startButton');
+  startButton.classList.add('loading');
+  startButton.textContent = 'Setting the table...';
+  setTimeout(beginMatch, 240);
+}
+
+function beginMatch() {
   players = [];
   scores = [];
   pocketedGlobal = {};
@@ -1166,8 +1466,10 @@ function startGame() {
   activeTurn = 0;
   breakTurn = 0;
   inning = 1;
-  foulPlayer = -1;
-  foulSelections = [];
+  undoStack = [];
+  matchStartedAt = Date.now();
+  clearInterval(timerHandle);
+  timerHandle = setInterval(updateTimer, 1000);
 
   for (let index = 0; index < numPlayers; index += 1) {
     const name = document.getElementById(`sname${index}`).value.trim() || `Player ${index + 1}`;
@@ -1179,17 +1481,33 @@ function startGame() {
   document.getElementById('setupHero').style.display = 'none';
   document.getElementById('setupScreen').style.display = 'none';
   document.getElementById('gameScreen').style.display = 'block';
+  document.getElementById('startButton').classList.remove('loading');
+  document.getElementById('startButton').innerHTML = 'Start Match &#127921;';
+  updateTimer();
   render();
 }
 
 function render() {
+  const required = nextBall();
   document.getElementById('inningDisplay').textContent = String(inning).padStart(2, '0');
   document.getElementById('breakPlayer').textContent = players[breakTurn] ? players[breakTurn].name : '-';
   document.getElementById('ballsRemaining').textContent = String(9 - Object.keys(pocketedGlobal).length);
   document.getElementById('nineBallStatus').textContent = pocketedGlobal[9] ? nineBallText() : 'On table';
+  document.getElementById('requiredBall').textContent = required ? `${required}-ball` : 'Complete';
+  document.getElementById('progressFill').style.width = `${(Object.keys(pocketedGlobal).length / 9) * 100}%`;
+  document.getElementById('undoButton').disabled = !undoStack.length;
   renderTurnBar();
   renderCards();
   renderLog();
+  renderRackHistory();
+}
+
+function updateTimer() {
+  if (!matchStartedAt) return;
+  const seconds = Math.floor((Date.now() - matchStartedAt) / 1000);
+  const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const remainder = String(seconds % 60).padStart(2, '0');
+  document.getElementById('timerDisplay').textContent = `${minutes}:${remainder}`;
 }
 
 function nineBallText() {
@@ -1220,6 +1538,7 @@ function renderCards() {
   const container = document.getElementById('playerCards');
   container.innerHTML = '';
   const maxScore = Math.max(...scores);
+  const required = nextBall();
 
   players.forEach((player, index) => {
     const isActive = activeTurn === index && !gameOver;
@@ -1238,113 +1557,90 @@ function renderCards() {
       </div>
       <div class="score-flash" id="fl${index}"></div>
     </div>
-    <div class="balls-label">Tap a ball when this player pockets it</div>
+    <div class="balls-label">${isActive ? `Pot Ball: tap the required ${required || 9}-ball` : 'Waiting for turn'}</div>
     <div class="balls-row" id="br${index}"></div>
     <div class="action-row">
-      <button class="action-btn btn-foul" onclick="openFoul(${index})">Foul (-3)</button>
-      <button class="action-btn btn-safety" onclick="callSafety(${index})">Safety / pass</button>
-    </div>
-    <div class="modal-backdrop" id="modal${index}">
-      <div class="modal-box">
-        <div class="modal-title">Foul - ${escapeHtml(player.name)}</div>
-        <div class="modal-sub">Select any balls pocketed during this foul.</div>
-        <div class="modal-note">Removed balls do not score. Player receives -3.</div>
-        <div class="modal-balls" id="mb${index}"></div>
-        <div class="modal-actions">
-          <button class="modal-btn" onclick="closeModal()">Cancel</button>
-          <button class="modal-btn confirm" onclick="confirmFoul(${index})">Confirm foul</button>
-        </div>
-      </div>
+      <button class="action-btn btn-foul" onclick="recordFoul(${index})" ${isActive ? '' : 'disabled'}>Foul (-3)</button>
+      <button class="action-btn btn-foul" onclick="recordScratch(${index})" ${isActive ? '' : 'disabled'}>Scratch (-3)</button>
+      <button class="action-btn btn-safety" onclick="callSafety(${index})" ${isActive ? '' : 'disabled'}>Safety</button>
     </div>`;
     container.appendChild(card);
 
     const ballsRow = document.getElementById(`br${index}`);
     for (let ball = 1; ball <= 9; ball += 1) {
       const gone = Boolean(pocketedGlobal[ball]);
+      const legal = isActive && required === ball;
       const element = document.createElement('button');
-      element.className = `ball p-ball${gone ? ' gone' : ''}`;
+      element.className = `ball p-ball${gone ? ' gone' : ''}${!gone && !legal ? ' locked' : ''}${legal ? ' required' : ''}`;
       element.style.background = gone ? BALL_BG[ball - 1] : ballBg(ball);
       element.style.color = BALL_FG[ball - 1];
       element.textContent = ball;
-      element.disabled = gone || gameOver;
-      if (!gone && !gameOver) element.onclick = () => pocketBall(index, ball);
+      element.disabled = gone || gameOver || !legal;
+      if (legal && !gameOver) element.onclick = () => pocketBall(index, ball);
       ballsRow.appendChild(element);
     }
 
-    if (foulPlayer === index) {
-      document.getElementById(`modal${index}`).classList.add('open');
-      const modalBalls = document.getElementById(`mb${index}`);
-      for (let ball = 1; ball <= 9; ball += 1) {
-        const gone = Boolean(pocketedGlobal[ball]);
-        const element = document.createElement('button');
-        element.className = `ball modal-ball${gone ? ' mgone' : ''}${foulSelections.includes(ball) ? ' msel' : ''}`;
-        element.style.background = ballBg(ball);
-        element.style.color = BALL_FG[ball - 1];
-        element.textContent = ball;
-        element.disabled = gone;
-        if (!gone) element.onclick = () => toggleFoulBall(ball);
-        modalBalls.appendChild(element);
-      }
-    }
   });
 }
 
-function flash(index, text, color) {
+function flash(index, text, color, className) {
   const element = document.getElementById(`fl${index}`);
   if (!element) return;
   element.textContent = text;
   element.style.color = color;
-  element.classList.add('show');
+  element.className = `score-flash show ${className || ''}`;
   setTimeout(() => {
-    element.classList.remove('show');
+    element.className = 'score-flash';
     element.textContent = '';
   }, 1400);
 }
 
 function pocketBall(index, ball) {
-  if (gameOver || pocketedGlobal[ball]) return;
+  if (gameOver || pocketedGlobal[ball] || index !== activeTurn || ball !== nextBall()) return;
+  saveUndoState();
   pocketedGlobal[ball] = true;
   scores[index] += ball;
   eventLog.push({ type: 'pocket', ball, player: players[index].name, pts: `+${ball}` });
   render();
-  flash(index, `+${ball} points`, 'var(--teal)');
-}
-
-function openFoul(index) {
-  if (gameOver) return;
-  foulPlayer = index;
-  foulSelections = [];
-  renderCards();
-}
-
-function toggleFoulBall(ball) {
-  if (foulSelections.includes(ball)) {
-    foulSelections = foulSelections.filter((selection) => selection !== ball);
-  } else {
-    foulSelections.push(ball);
+  flash(index, `+${ball}`, 'var(--teal)', 'gain');
+  showNotice(`${players[index].name} pockets the ${ball}-ball for +${ball}`, 'good');
+  playTone('good');
+  if (ball === 9) {
+    setTimeout(() => endGame(true), 450);
   }
-  renderCards();
 }
 
-function confirmFoul(index) {
-  foulSelections.forEach((ball) => {
-    pocketedGlobal[ball] = true;
-  });
+function recordFoul(index) {
+  if (gameOver || index !== activeTurn) return;
+  saveUndoState();
   scores[index] -= 3;
-  const note = foulSelections.length ? `-3 (${foulSelections.join(', ')} removed)` : '-3';
-  eventLog.push({ type: 'foul', ball: null, player: players[index].name, pts: note });
-  foulPlayer = -1;
-  foulSelections = [];
+  eventLog.push({ type: 'foul', ball: null, player: players[index].name, pts: '-3' });
   advanceTurn(index);
   render();
-  flash(index, '-3 foul', 'var(--danger)');
+  flash(index, '-3', 'var(--danger)', 'loss');
+  showNotice(`${players[index].name} commits a foul: -3 points`, 'bad');
+  playTone('bad');
+}
+
+function recordScratch(index) {
+  if (gameOver || index !== activeTurn) return;
+  saveUndoState();
+  scores[index] -= 3;
+  eventLog.push({ type: 'scratch', ball: null, player: players[index].name, pts: '-3' });
+  advanceTurn(index);
+  render();
+  flash(index, '-3', 'var(--danger)', 'loss');
+  showNotice(`Scratch by ${players[index].name}: potted balls do not count`, 'bad');
+  playTone('bad');
 }
 
 function callSafety(index) {
-  if (gameOver) return;
+  if (gameOver || index !== activeTurn) return;
+  saveUndoState();
   eventLog.push({ type: 'safety', ball: null, player: players[index].name, pts: 'Pass' });
   advanceTurn(index);
   render();
+  showNotice(`${players[index].name} plays safe. Turn passes.`, 'good');
 }
 
 function advanceTurn(index) {
@@ -1352,25 +1648,53 @@ function advanceTurn(index) {
   inning += 1;
 }
 
-function closeModal() {
-  foulPlayer = -1;
-  foulSelections = [];
-  renderCards();
+function undoLastShot() {
+  if (!undoStack.length) return;
+  const previous = JSON.parse(undoStack.pop());
+  scores = previous.scores;
+  pocketedGlobal = previous.pocketedGlobal;
+  eventLog = previous.eventLog;
+  activeTurn = previous.activeTurn;
+  inning = previous.inning;
+  gameOver = previous.gameOver;
+  document.getElementById('winnerBanner').style.display = 'none';
+  document.getElementById('winnerBanner').classList.remove('nine-win');
+  if (!gameOver && matchStartedAt) {
+    clearInterval(timerHandle);
+    timerHandle = setInterval(updateTimer, 1000);
+  }
+  showNotice('Last shot undone', 'good');
+  render();
 }
 
-function endGame() {
+function endGame(automatic) {
+  if (automatic && !pocketedGlobal[9]) return;
+  if (gameOver) return;
   gameOver = true;
+  clearInterval(timerHandle);
+  timerHandle = null;
   const maxScore = Math.max(...scores);
   const winners = players.filter((_, index) => scores[index] === maxScore);
   const banner = document.getElementById('winnerBanner');
   banner.style.display = 'block';
+  banner.classList.toggle('nine-win', Boolean(automatic));
   if (winners.length > 1) {
     document.getElementById('winnerText').textContent = "Rack ends in a tie";
     document.getElementById('winnerSub').textContent = `${winners.map((player) => player.name).join(' & ')} - ${maxScore} points each`;
   } else {
     const winnerIndex = scores.indexOf(maxScore);
-    document.getElementById('winnerText').textContent = `${players[winnerIndex].name} wins the rack`;
+    document.getElementById('winnerText').textContent = `${players[winnerIndex].name} wins the rack!`;
     document.getElementById('winnerSub').textContent = scores.map((score, index) => `${players[index].name}: ${score}`).join('  |  ');
+  }
+  rackWinners.unshift({
+    name: winners.map((player) => player.name).join(' & '),
+    score: maxScore,
+    automatic: Boolean(automatic)
+  });
+  saveRackWinners();
+  if (automatic) {
+    showNotice('9-ball completed! Rack winner recorded.', 'good');
+    playTone('good');
   }
   render();
 }
@@ -1384,7 +1708,7 @@ function renderLog() {
   list.innerHTML = eventLog.slice().reverse().map((event, index) => {
     const number = eventLog.length - index;
     const isNine = event.type === 'pocket' && event.ball === 9;
-    const tagClass = isNine ? 'tag-nine' : event.type === 'pocket' ? 'tag-pocket' : event.type === 'foul' ? 'tag-foul' : 'tag-safety';
+    const tagClass = isNine ? 'tag-nine' : event.type === 'pocket' ? 'tag-pocket' : event.type === 'foul' ? 'tag-foul' : event.type === 'scratch' ? 'tag-scratch' : 'tag-safety';
     const tagLabel = isNine ? '9-ball' : event.type;
     const ballDot = event.ball ? ballMarkup(event.ball, '') : '';
     return `<div class="log-row">
@@ -1397,11 +1721,24 @@ function renderLog() {
   }).join('');
 }
 
+function renderRackHistory() {
+  const history = document.getElementById('rackHistory');
+  if (!rackWinners.length) {
+    history.textContent = 'No completed racks yet';
+    return;
+  }
+  history.innerHTML = rackWinners.slice(0, 4).map((winner, index) => {
+    return `${index + 1}. ${escapeHtml(winner.name)} - ${winner.score} pts`;
+  }).join('<br>');
+}
+
 function backToSetup() {
+  clearInterval(timerHandle);
+  timerHandle = null;
+  matchStartedAt = 0;
   gameOver = false;
-  foulPlayer = -1;
-  foulSelections = [];
   document.getElementById('winnerBanner').style.display = 'none';
+  document.getElementById('winnerBanner').classList.remove('nine-win');
   document.getElementById('gameScreen').style.display = 'none';
   document.getElementById('setupHero').style.display = 'block';
   document.getElementById('setupScreen').style.display = 'block';
@@ -1411,4 +1748,3 @@ function backToSetup() {
 renderLegend();
 setCount(4);
 </script>
-
